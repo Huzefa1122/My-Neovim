@@ -32,7 +32,7 @@ require("lazy").setup({
     "navarasu/onedark.nvim",
     "nvim-tree/nvim-tree.lua", -- Add nvim-tree plugin
     "nvim-tree/nvim-web-devicons",
-
+    "karb94/neoscroll.nvim",
     -- Add Mason and Mason-LSPconfig
     "williamboman/mason.nvim",
     "williamboman/mason-lspconfig.nvim",
@@ -59,6 +59,14 @@ vim.opt.smartindent = true
 vim.opt.wrap = false
 vim.opt.termguicolors = true
 vim.opt.clipboard = "unnamedplus"
+
+-- Smooth Scrolling
+-- neoscroll.nvim configuration
+require('neoscroll').setup({
+    easing_function = "quadratic",  -- You can try different easing functions
+    hide_cursor = false,  -- Hide the cursor while scrolling
+})
+
 
 -- Theme
 require('onedark').setup {
@@ -101,10 +109,10 @@ require("mason-lspconfig").setup({
 -- Multi Cursor Setup
 
 vim.g.VM_maps = {
-    ['Find Under'] = '<C-A-Down>',    -- Start multicursor selection
+    ['Find Under'] = '<C-A-Down>',      -- Start multicursor selection
     ['Find Subword Under'] = '<C-A-n>', -- Start multicursor selection for subwords
-    ['Select All'] = '<C-F2>',        -- Select all occurrences
-    ['Skip Region'] = '<A>',          -- Skip the current selection
+    ['Select All'] = '<C-F2>',          -- Select all occurrences
+    ['Skip Region'] = '<A>',            -- Skip the current selection
 }
 
 -- LSP Configuration
