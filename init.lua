@@ -44,7 +44,14 @@ require("lazy").setup({
     "onsails/lspkind-nvim",
     "akinsho/toggleterm.nvim",
     "jose-elias-alvarez/nvim-lsp-ts-utils",
-
+    "neoclide/coc.nvim",
+    {
+        'windwp/nvim-ts-autotag',
+        after = 'nvim-treesitter',
+        config = function()
+            require('nvim-ts-autotag').setup()
+        end,
+    },
     -- Formatter
     "jose-elias-alvarez/null-ls.nvim"
 })
@@ -63,9 +70,18 @@ vim.opt.clipboard = "unnamedplus"
 -- Smooth Scrolling
 -- neoscroll.nvim configuration
 require('neoscroll').setup({
-    easing_function = "quadratic",  -- You can try different easing functions
-    hide_cursor = false,  -- Hide the cursor while scrolling
+    easing_function = "quadratic", -- You can try different easing functions
+    hide_cursor = false,           -- Hide the cursor while scrolling
 })
+require 'nvim-treesitter.configs'.setup {
+    auto_install=true,
+   ensure_installed = { "c", "lua", "python", "javascript", "html", "css", "go", "svelte","htmldjango","tsx" },
+    highlight = {
+        enable = true,
+    },
+}
+-- Auto Rename Tag
+require('nvim-ts-autotag').setup()
 
 
 -- Theme
@@ -102,6 +118,7 @@ require("mason-lspconfig").setup({
         "html",
         "cssls",
         "lua_ls",
+        "pyright",
     },
     automatic_installation = true,
 })
@@ -132,8 +149,16 @@ lspconfig.tsserver.setup {
     end,
 }
 lspconfig.svelte.setup {}
-lspconfig.html.setup {}
-lspconfig.cssls.setup {}
+lspconfig.svelte.setup {}
+lspconfig.html.setup {
+  capabilities = require('cmp_nvim_lsp').default_capabilities(),
+  filetypes = { "html", "htmldjango" }, -- Add more filetypes if necessary
+}
+lspconfig.cssls.setup {
+  capabilities = require('cmp_nvim_lsp').default_capabilities(),
+  filetypes = { "css"}, -- Add more filetypes if necessary
+}
+lspconfig.pyright.setup {}
 lspconfig.lua_ls.setup {
     settings = {
         Lua = {
@@ -184,12 +209,7 @@ cmp.setup({
 -- LSP configuration for TypeScript/JavaScript with auto-imports
 
 -- Treesitter (Better Syntax Highlighting)
-require 'nvim-treesitter.configs'.setup {
-    ensure_installed = { "c", "lua", "python", "javascript", "html", "css", "go", "svelte" },
-    highlight = {
-        enable = true,
-    },
-}
+
 
 -- Auto-pairs (Automatic closing of brackets, quotes, etc.)
 require('nvim-autopairs').setup {}
@@ -240,11 +260,11 @@ local function lsp_formatting(bufnr)
 end
 
 -- Set up auto-formatting on save
-vim.api.nvim_create_autocmd("BufWritePre", {
-    callback = function(event)
-        lsp_formatting(event.buf)
-    end,
-})
+-- vim.api.nvim_create_autocmd("BufWritePre", {
+--    callback = function(event)
+--        lsp_formatting(event.buf)
+--    end,
+-- })
 
 -- Commenting
 vim.keymap.set("n", "<leader>/", ":Commentary<CR>")

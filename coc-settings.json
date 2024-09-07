@@ -1,0 +1,18 @@
+{
+  "languageserver": {
+    "python": {
+      "command": "pyright-langserver",
+      "args": ["--stdio"],
+      "filetypes": ["python"],
+      "rootPatterns": [
+        "setup.py",
+        "pyproject.toml",
+        "requirements.txt",
+        ".git"
+      ],
+      "settings": {
+        "python.pythonPath": "python"
+      }
+    }
+  }
+}
