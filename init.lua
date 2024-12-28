@@ -47,7 +47,9 @@ require("lazy").setup({
     "akinsho/toggleterm.nvim",
     "jose-elias-alvarez/nvim-lsp-ts-utils",
     "neoclide/coc.nvim",
+    "tpope/vim-surround",
     "Shatur/neovim-ayu",
+    "kylechui/nvim-surround",
     {
         'windwp/nvim-ts-autotag',
         after = 'nvim-treesitter',
@@ -156,7 +158,6 @@ lspconfig.tsserver.setup {
     end,
 }
 lspconfig.svelte.setup {}
-lspconfig.svelte.setup {}
 lspconfig.html.setup {
     capabilities = require('cmp_nvim_lsp').default_capabilities(),
     filetypes = { "html", "htmldjango" }, -- Add more filetypes if necessary
@@ -201,8 +202,10 @@ cmp.setup({
     },
     mapping = {
         ['<C-n>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
+        ['<Down>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
         ['<C-p>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
-        ['<C-y>'] = cmp.mapping.confirm({ select = true }),
+        ['<Up'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
+        ['<CR>'] = cmp.mapping.confirm({ select = true }),
     },
     sources = {
         { name = 'nvim_lsp' },
@@ -249,7 +252,7 @@ require("nvim-tree").setup({
 -- ToggleTerm setup
 require("toggleterm").setup({
     size = 15,                -- Height of the terminal window
-    open_mapping = [[<C-\>]], -- Keybinding to toggle terminal
+    open_mapping = [[<C-`>]], -- Keybinding to toggle terminal
     direction = 'horizontal', -- Open terminal horizontally
     shading_factor = 2,       -- Darken the terminal background
     close_on_exit = true,     -- Close terminal when process exits
@@ -266,6 +269,12 @@ local function lsp_formatting(bufnr)
     })
 end
 
+
+-- Neovim Surround
+require("nvim-surround").setup({})
+
+
+
 -- Set up auto-formatting on save
 -- vim.api.nvim_create_autocmd("BufWritePre", {
 --    callback = function(event)
@@ -273,28 +282,29 @@ end
 --    end,
 -- })
 
+
 -- Commenting
 vim.keymap.set("n", "<leader>/", ":Commentary<CR>")
 vim.keymap.set('n', '<C-s>', ':w<CR>')
 vim.keymap.set('i', '<C-s>', '<Esc>:w<CR>a')
-vim.keymap.set('v', '<C-c>', '+y')
-vim.keymap.set('n', '<C-x>', 'dd')
-vim.keymap.set('n', '<C-v>', 'p')
-vim.keymap.set('i', '<C-v>', '<Esc>pa')
 vim.keymap.set('n', '<C-z>', 'u')
+vim.keymap.set('n', '<C-S-z>', '<C-r>')
 vim.keymap.set('n', '<C-y>', '<C-r>')
 vim.keymap.set('n', '<C-a>', 'ggVG')
 
-vim.keymap.set('n', '<A-Down>', ':m .+1<CR>==')
-vim.keymap.set('n', '<A-Up>', ':m .-2<CR>==')
+vim.keymap.set('v', '<A-Up>', ":m '<-2<CR>gv=gv")
+vim.keymap.set('v', '<A-Down>', ":m '>+1<CR>gv=gv")
+
+vim.keymap.set('n', '<A-Up>', ':m .-2<CR>==g')
+vim.keymap.set('n', '<A-Down>', ':m .+1<CR>==g')
+
 vim.keymap.set('i', '<A-Down>', '<Esc>:m .+1<CR>==gi')
 vim.keymap.set('i', '<A-Up>', '<Esc>:m .-2<CR>==gi')
-vim.keymap.set('v', '<A-Down>', ":m '>+1<CR>gv=gv")
-vim.keymap.set('v', '<A-Up>', ":m '<-2<CR>gv=gv")
+
 vim.keymap.set('n', '<S-A-Down>', 'yyp')
 vim.keymap.set('v', '<S-A-Down>', ":'<,'>t'><CR>gv")
+
 -- Keybinding to toggle the file explorer
 vim.keymap.set('n', '<C-e>', ':NvimTreeToggle<CR>')
--- Keybinding to toggle the terminal
-vim.keymap.set('n', '<C-\\>', ':ToggleTerm<CR>')
+-- Formating Keybinding
 vim.api.nvim_set_keymap('n', '<A-f>', ':lua vim.lsp.buf.format({ async = true })<CR>', { noremap = true, silent = true })
