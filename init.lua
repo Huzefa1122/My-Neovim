@@ -204,8 +204,9 @@ cmp.setup({
         ['<C-n>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
         ['<Down>'] = cmp.mapping.select_next_item({ behavior = cmp.SelectBehavior.Insert }),
         ['<C-p>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
-        ['<Up'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
+        ['<Up>'] = cmp.mapping.select_prev_item({ behavior = cmp.SelectBehavior.Insert }),
         ['<CR>'] = cmp.mapping.confirm({ select = true }),
+        ['<C-y>'] = cmp.mapping.confirm({ select = true }),
     },
     sources = {
         { name = 'nvim_lsp' },
@@ -295,11 +296,11 @@ vim.keymap.set('n', '<C-a>', 'ggVG')
 vim.keymap.set('v', '<A-Up>', ":m '<-2<CR>gv=gv")
 vim.keymap.set('v', '<A-Down>', ":m '>+1<CR>gv=gv")
 
-vim.keymap.set('n', '<A-Up>', ':m .-2<CR>==g')
-vim.keymap.set('n', '<A-Down>', ':m .+1<CR>==g')
+vim.keymap.set('n', '<A-Up>', ':m .-2<CR>==')
+vim.keymap.set('n', '<A-Down>', ':m .+1<CR>==')
 
-vim.keymap.set('i', '<A-Down>', '<Esc>:m .+1<CR>==gi')
 vim.keymap.set('i', '<A-Up>', '<Esc>:m .-2<CR>==gi')
+vim.keymap.set('i', '<A-Down>', '<Esc>:m .+1<CR>==gi')
 
 vim.keymap.set('n', '<S-A-Down>', 'yyp')
 vim.keymap.set('v', '<S-A-Down>', ":'<,'>t'><CR>gv")
