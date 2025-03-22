@@ -4,17 +4,17 @@
 vim.g.mapleader = " "
 local lazypath = vim.fn.stdpath("data") .. "/lazy/lazy.nvim"
 if not (vim.uv or vim.loop).fs_stat(lazypath) then
-    local lazyrepo = "https://github.com/folke/lazy.nvim.git"
-    local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
-    if vim.v.shell_error ~= 0 then
-        vim.api.nvim_echo({
-            { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
-            { out,                            "WarningMsg" },
-            { "\nPress any key to exit..." },
-        }, true, {})
-        vim.fn.getchar()
-        os.exit(1)
-    end
+  local lazyrepo = "https://github.com/folke/lazy.nvim.git"
+  local out = vim.fn.system({ "git", "clone", "--filter=blob:none", "--branch=stable", lazyrepo, lazypath })
+  if vim.v.shell_error ~= 0 then
+    vim.api.nvim_echo({
+      { "Failed to clone lazy.nvim:\n", "ErrorMsg" },
+      { out, "WarningMsg" },
+      { "\nPress any key to exit..." },
+    }, true, {})
+    vim.fn.getchar()
+    os.exit(1)
+  end
 end
 vim.opt.rtp:prepend(lazypath)
 
@@ -46,10 +46,10 @@ require("lazy").setup({
     "onsails/lspkind-nvim",
     "akinsho/toggleterm.nvim",
     "jose-elias-alvarez/nvim-lsp-ts-utils",
-    "neoclide/coc.nvim",
     "tpope/vim-surround",
     "Shatur/neovim-ayu",
     "kylechui/nvim-surround",
+    "nvim-pack/nvim-spectre",
     {
         'windwp/nvim-ts-autotag',
         after = 'nvim-treesitter',
@@ -60,7 +60,7 @@ require("lazy").setup({
     -- Formatter
     "jose-elias-alvarez/null-ls.nvim"
 })
-
+require('spectre').setup()
 -- Basic settings
 vim.opt.number = true
 vim.opt.relativenumber = true
@@ -121,13 +121,12 @@ null_ls.setup({
 require("mason-lspconfig").setup({
     ensure_installed = {
         "gopls",
-        "clangd",
-        "tsserver",
-        "svelte",
+        "ts_ls",
         "html",
         "cssls",
         "lua_ls",
         "pyright",
+        "tailwindcss"
     },
     automatic_installation = true,
 })
@@ -146,8 +145,7 @@ local lspconfig = require('lspconfig')
 
 -- Language servers setup
 lspconfig.gopls.setup {}
-lspconfig.clangd.setup {}
-lspconfig.tsserver.setup {
+lspconfig.ts_ls.setup {
     on_attach = function(client)
         local ts_utils = require("nvim-lsp-ts-utils")
         ts_utils.setup({
@@ -157,7 +155,8 @@ lspconfig.tsserver.setup {
         ts_utils.setup_client(client)
     end,
 }
-lspconfig.svelte.setup {}
+
+lspconfig.tailwindcss.setup {}
 lspconfig.html.setup {
     capabilities = require('cmp_nvim_lsp').default_capabilities(),
     filetypes = { "html", "htmldjango" }, -- Add more filetypes if necessary
@@ -309,3 +308,16 @@ vim.keymap.set('v', '<S-A-Down>', ":'<,'>t'><CR>gv")
 vim.keymap.set('n', '<C-e>', ':NvimTreeToggle<CR>')
 -- Formating Keybinding
 vim.api.nvim_set_keymap('n', '<A-f>', ':lua vim.lsp.buf.format({ async = true })<CR>', { noremap = true, silent = true })
+
+vim.keymap.set('n', '<leader>S', '<cmd>lua require("spectre").toggle()<CR>', {
+    desc = "Toggle Spectre"
+})
+vim.keymap.set('n', '<leader>sw', '<cmd>lua require("spectre").open_visual({select_word=true})<CR>', {
+    desc = "Search current word"
+})
+vim.keymap.set('v', '<leader>sw', '<esc><cmd>lua require("spectre").open_visual()<CR>', {
+    desc = "Search current word"
+})
+vim.keymap.set('n', '<leader>sp', '<cmd>lua require("spectre").open_file_search({select_word=true})<CR>', {
+    desc = "Search on current file"
+})
