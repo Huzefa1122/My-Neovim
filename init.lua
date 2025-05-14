@@ -58,7 +58,7 @@ require("lazy").setup({
         end,
     },
     -- Formatter
-    "jose-elias-alvarez/null-ls.nvim"
+    "nvimtools/none-ls.nvim"
 })
 require('spectre').setup()
 -- Basic settings
